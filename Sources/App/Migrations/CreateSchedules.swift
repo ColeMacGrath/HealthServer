@@ -14,7 +14,7 @@ struct CreateSchedules: Migration {
             .field("doctor_id", .uuid)
             .field("day", .int)
             .field("hours", .array(of: .int))
-            .update()
+            .create()
     }
     
     func revert(on database: Database) -> EventLoopFuture<Void> {

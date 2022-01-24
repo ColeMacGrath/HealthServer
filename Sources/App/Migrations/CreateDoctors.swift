@@ -13,7 +13,7 @@ struct CreateDoctors: Migration {
             .field("id", .uuid)
             .field("user_id", .uuid, .required)
             .field("specialization", .string)
-            .field("abour", .string)
+            .field("about", .string)
             .field("address", .string)
             .field("coordinates", .string)
             .create()

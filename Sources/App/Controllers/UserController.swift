@@ -13,7 +13,6 @@ struct UserSignup: Content {
     let firstName: String
     let lastName: String?
     let password: String
-    let type: Int
 }
 
 struct NewSession: Content {

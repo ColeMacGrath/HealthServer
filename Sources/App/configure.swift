@@ -17,8 +17,8 @@ public func configure(_ app: Application) throws {
     
     app.migrations.add(CreateUsers())
     app.migrations.add(CreateTokens())
-    app.migrations.add(CreateDoctors())
     app.migrations.add(CreateHealthRecords())
+    app.migrations.add(CreateDoctors())
     app.migrations.add(CreateSchedules())
     
     try app.autoMigrate().wait()
