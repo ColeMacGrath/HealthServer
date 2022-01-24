@@ -13,6 +13,7 @@ struct UserSignup: Content {
     let firstName: String
     let lastName: String?
     let password: String
+    let type: Int
 }
 
 struct NewSession: Content {
@@ -49,7 +50,6 @@ struct UserController: RouteCollection {
             guard !exists else {
                 return req.eventLoop.future(error: UserError.emailTaken)
             }
-            
             return user.save(on: req.db)
         }.flatMap {
             guard let newToken = try? user.createToken(source: .signup) else {

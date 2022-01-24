@@ -40,7 +40,7 @@ struct HealthRecordController: RouteCollection {
     func getAllRecordsFor(_ req: Request) throws -> EventLoopFuture<[HealthRecord]> {
         let userId = try req.content.decode(UserId.self).user_id
         let healthRecords = HealthRecord.query(on: req.db).all().map { records in
-            records.filter({ $0.$user.id == userId })
+            records.filter{ $0.$user.id == userId }
         }
         
         return healthRecords
