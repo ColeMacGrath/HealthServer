@@ -16,6 +16,10 @@ struct DoctorData: Content {
     let coordinates: String?
 }
 
+struct DoctorId: Content {
+    let doctor_id: UUID
+}
+
 final class Doctor: Model, Content {
     static let schema = "doctors"
     

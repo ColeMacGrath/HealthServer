@@ -14,7 +14,7 @@ struct ScheduleData: Content {
     let hours: [Int]
 }
 
-final class Schedule: Model {
+final class Schedule: Model, Content {
     static let schema = "schedules"
     
     @ID(key: "id")
