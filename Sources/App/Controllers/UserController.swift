@@ -11,7 +11,7 @@ import Fluent
 struct UserSignup: Content {
     let email: String
     let firstName: String
-    let lastName: String
+    let lastName: String?
     let password: String
 }
 
@@ -78,6 +78,13 @@ struct UserController: RouteCollection {
     private func checkIfUserExists(_ email: String, req: Request) -> EventLoopFuture<Bool> {
         User.query(on: req.db)
             .filter(\.$email == email)
+            .first()
+            .map { $0 != nil }
+    }
+    
+    func checkIfUserExistsBy(id: UUID, req: Request) -> EventLoopFuture<Bool> {
+        User.query(on: req.db)
+            .filter(\.$id == id)
             .first()
             .map { $0 != nil }
     }
