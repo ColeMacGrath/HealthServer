@@ -11,7 +11,6 @@ struct CreateDoctors: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema(Doctor.schema)
             .field("id", .uuid)
-            .field("schedules_id", .uuid)
             .field("user_id", .uuid, .required)
             .field("specialization", .string)
             .field("abour", .string)

@@ -19,7 +19,7 @@ struct UserId: Content {
 }
 
 final class HealthRecord: Model, Content {
-    static let schema = "HealthRecord"
+    static let schema = "healthRecord"
     
     @ID(key: "id")
     var id: UUID?
