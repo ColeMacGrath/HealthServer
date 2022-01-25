@@ -13,8 +13,9 @@ final class User: Model {
         let id: UUID
         let email: String
         let firstName: String
+        let biologicalSex: String?
+        let birtdDate: Date?
         let lastName: String?
-        let gender: String?
         let age: Int?
         let createdAt: Date?
         let updatedAt: Date?
@@ -37,11 +38,14 @@ final class User: Model {
     @Field(key: "age")
     var age: Int?
     
-    @Field(key: "gender")
-    var gender: String?
-    
     @Field(key: "password_hash")
     var passwordHash: String
+    
+    @Field(key: "biological_sex")
+    var biologicalSex: String?
+    
+    @Field(key: "birth_date")
+    var birthDate: Date?
     
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
@@ -51,14 +55,15 @@ final class User: Model {
     
     init() {}
     
-    init(id: UUID? = nil, email: String, firstName: String, lastName: String? = nil, age: Int? = nil, gender: String? = nil, passwordHash: String) {
+    init(id: UUID? = nil, email: String, firstName: String, lastName: String? = nil, biologicalSex: String? = nil, birthDate: Date? = nil, age: Int? = nil, passwordHash: String) {
         self.id = id
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
         self.age = age
-        self.gender = gender
         self.passwordHash = passwordHash
+        self.biologicalSex = biologicalSex
+        self.birthDate = birthDate
     }
 }
 
@@ -75,7 +80,7 @@ extension User {
     }
     
     func asPublic() throws -> Public {
-        Public(id: try requireID(), email: email, firstName: firstName, lastName: lastName, gender: gender, age: age, createdAt: createdAt, updatedAt: updatedAt)
+        Public(id: try requireID(), email: email, firstName: firstName, biologicalSex: biologicalSex, birtdDate: birthDate, lastName: lastName, age: age, createdAt: createdAt, updatedAt: updatedAt)
     }
 }
 

@@ -16,6 +16,8 @@ struct CreateUsers: Migration {
             .field("first_name", .string, .required)
             .field("last_name", .string)
             .field("gender", .string)
+            .field("biologicalSex", .string)
+            .field("birth_date", .string)
             .field("age", .string)
             .field("password_hash", .string, .required)
             .field("created_at", .datetime, .required)
