@@ -14,6 +14,7 @@ struct HealthRecordController: RouteCollection {
         healthRecordRoute.get("getAll", use: getAllRecords)
         healthRecordRoute.post("create", use: create)
         healthRecordRoute.post("createMultiple", use: createMultipleRecords)
+        healthRecordRoute.post("replaceRecords", use: replaceMultipleRecords)
         healthRecordRoute.post("getFor", use: getAllRecordsFor)
     }
     
@@ -30,6 +31,15 @@ struct HealthRecordController: RouteCollection {
         let healthRecordData = try req.content.decode([HealthRecordData].self).map({ record -> HealthRecord in
             return try HealthRecord.create(from: record)
         })
+        return healthRecordData.create(on: req.db).transform(to: HTTPStatus.created)
+    }
+    
+    func replaceMultipleRecords(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        _ = HealthRecord.query(on: req.db).delete()
+        let healthRecordData = try req.content.decode([HealthRecordData].self).map({ record -> HealthRecord in
+            return try HealthRecord.create(from: record)
+        })
+        
         return healthRecordData.create(on: req.db).transform(to: HTTPStatus.created)
     }
     

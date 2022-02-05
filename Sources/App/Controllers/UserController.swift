@@ -7,6 +7,8 @@
 
 import Vapor
 import Fluent
+import PostgresNIO
+import Foundation
 
 struct UserSignup: Content {
     let email: String
@@ -18,6 +20,15 @@ struct UserSignup: Content {
 struct NewSession: Content {
     let token: String
     let user: User.Public
+}
+
+struct UserBasicInfo: Content {
+    let user_id: UUID
+    let email: String?
+    let first_name: String?
+    let last_name: String?
+    let biological_sex: String?
+    let birth_date: String?
 }
 
 extension UserSignup: Validatable {
@@ -37,6 +48,8 @@ struct UserController: RouteCollection {
         
         let passwordProtected = usersRoute.grouped(User.authenticator())
         passwordProtected.post("login", use: login)
+        
+        usersRoute.patch("updateUser", use: updateUser)
     }
     
     fileprivate func create(req: Request) throws -> EventLoopFuture<NewSession> {
@@ -87,4 +100,53 @@ struct UserController: RouteCollection {
             .first()
             .map { $0 != nil }
     }
+    
+    func updateUser(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let userToUpdate = try req.content.decode(UserBasicInfo.self)
+        
+        
+        return User.query(on: req.db)
+            .filter(\.$id == userToUpdate.user_id)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { user in
+                
+                if let name = userToUpdate.first_name {
+                    user.firstName = name
+                }
+                
+                if let lastName = userToUpdate.last_name {
+                    user.lastName = lastName
+                }
+                
+                if let biologicalSex = userToUpdate.biological_sex {
+                    user.biologicalSex = biologicalSex
+                }
+                
+                if let email = userToUpdate.email {
+                    user.email = email
+                }
+                
+                if let birthDate = userToUpdate.birth_date {
+                    let isoDateFormatter = ISO8601DateFormatter()
+                    isoDateFormatter.timeZone = TimeZone(secondsFromGMT: .zero)
+                    isoDateFormatter.formatOptions = [
+                        .withFullDate,
+                        .withFullTime,
+                        .withDashSeparatorInDate]
+                    
+                    if let date = isoDateFormatter.date(from: birthDate) {
+                        user.birthDate = date
+                        user.updatedAt = Date()
+                    } else {
+                        return req.eventLoop.future(error: Abort(.badRequest))
+                    }
+                } else {
+                    return req.eventLoop.future(error: Abort(.badRequest))
+                }
+                
+                return user.update(on: req.db).map { User.self }.transform(to: HTTPStatus.ok)
+            }
+    }
+    
 }

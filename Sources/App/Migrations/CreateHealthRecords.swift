@@ -12,8 +12,11 @@ struct CreateHealthRecords: Migration {
         database.schema(HealthRecord.schema)
             .field("id", .uuid)
             .field("user_id", .uuid, .required)
-            .field("date", .datetime, .required)
+            .field("initial_date", .datetime, .required)
+            .field("finish_date", .datetime, .required)
             .field("total", .double, .required)
+            .field("identifier", .string, .required)
+            .field("description", .string)
             .create()
     }
     
