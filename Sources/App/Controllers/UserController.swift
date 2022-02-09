@@ -44,7 +44,7 @@ struct UserController: RouteCollection {
         usersRoute.post("signup", use: create)
         
         let tokenProtected = usersRoute.grouped(Token.authenticator())
-        tokenProtected.get("me", use: getMyOwnUser)
+        tokenProtected.get("getUser", use: getMyOwnUser)
         
         let passwordProtected = usersRoute.grouped(User.authenticator())
         passwordProtected.post("login", use: login)
@@ -141,12 +141,16 @@ struct UserController: RouteCollection {
                     } else {
                         return req.eventLoop.future(error: Abort(.badRequest))
                     }
-                } else {
-                    return req.eventLoop.future(error: Abort(.badRequest))
                 }
                 
                 return user.update(on: req.db).map { User.self }.transform(to: HTTPStatus.ok)
             }
     }
+    
+    
+    
+    //func addDoctor(_ req: Request) throws -> EventLoopFuture<Doctor> {
+    //
+    //}
     
 }

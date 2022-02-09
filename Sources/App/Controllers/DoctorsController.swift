@@ -6,6 +6,9 @@
 //
 
 import Vapor
+import Fluent
+import PostgresNIO
+import Foundation
 
 struct DoctorsController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -17,5 +20,12 @@ struct DoctorsController: RouteCollection {
         let doctorData = try req.content.decode(DoctorData.self)
         let doctor = try Doctor.create(from: doctorData)
         return doctor.save(on: req.db).flatMapThrowing { doctor }
+    }
+    
+    func checkIfDoctorExistsBy(id: UUID, req: Request) -> EventLoopFuture<Bool> {
+        User.query(on: req.db)
+            .filter(\.$id == id)
+            .first()
+            .map { $0 != nil }
     }
 }

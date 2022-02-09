@@ -23,6 +23,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateDoctors())
     app.migrations.add(CreateSchedules())
     app.migrations.add(CreateAppointments())
+    app.migrations.add(CreateBookedDoctors())
     
     try app.autoMigrate().wait()
     

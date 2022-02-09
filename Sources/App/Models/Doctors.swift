@@ -18,9 +18,12 @@ struct DoctorData: Content {
 
 struct DoctorId: Content {
     let doctor_id: UUID
+    let user_id: UUID?
 }
 
-final class Doctor: Model, Content {
+
+
+final class Doctor: Model, Content {    
     static let schema = "doctors"
     
     @ID(key: "id")
